@@ -1,0 +1,287 @@
+﻿<!doctype html>
+<html lang="en" data-bs-theme="auto">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Управление заказами</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="/css/common.css" rel="stylesheet">
+</head>
+<body>
+
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+        <symbol id="check" viewBox="0 0 16 16">
+            <title>Проверка</title>
+            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </symbol>
+    </svg>
+
+    <div class="container py-3">
+        <header>
+            <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+                <a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none">
+                    <span class="fs-4">Поиск <span class="badge text-bg-secondary">и фильтрация</span></span>
+                </a>
+
+                <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+                    <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/home.html">Поиск заказов</a>
+                    <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="#">Все заказы</a>
+                    <a class="py-2 link-body-emphasis text-decoration-none" href="#">Профиль</a>
+                </nav>
+            </div>
+
+            <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+                <h1 class="display-4 fw-normal text-body-emphasis">Примеры реализации</h1>
+                <p class="fs-5 text-body-secondary">Работа с Odata и кастомной реализацией фильтров.</p>
+            </div>
+
+           
+
+        </header>
+
+        <main>
+
+            <div class="container my-5">
+                <ul class="nav nav-tabs" id="searchTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="odata-tab" data-bs-toggle="tab" data-bs-target="#odata" type="button" role="tab" aria-controls="odata" aria-selected="true">Odata</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="sieve-tab" data-bs-toggle="tab" data-bs-target="#sieve" type="button" role="tab" aria-controls="sieve" aria-selected="false">Sieve</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+	                    <button class="nav-link" id="ra-tab" data-bs-toggle="tab" data-bs-target="#ra" type="button" role="tab" aria-controls="ra" aria-selected="false">Custom</button>
+                    </li>
+
+                </ul>
+
+                <div class="tab-content mt-3" id="searchTabContent">
+                    <div class="tab-pane fade show active" id="odata" role="tabpanel" aria-labelledby="odata-tab">
+                        <h2 class="mb-3">OData поиск</h2>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="userNameOdata" class="form-label">Пользователь</label>
+                                <input type="text" class="form-control" id="userNameOdata" placeholder="ivanov">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cartTotalOdata" class="form-label">Сумма больше</label>
+                                <input type="number" class="form-control" id="cartTotalOdata">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cartItemNameOdata" class="form-label">Предмет заказа</label>
+                                <input type="text" class="form-control" id="cartItemNameOdata" placeholder="Карандаш">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="orderStatusOdata" class="form-label">Статус заказа</label>
+                                <select id="orderStatusOdata" class="form-select">
+                                    <option value="" selected>Выбор...</option>
+                                    <option value="init">Оформление</option>
+                                    <option value="paid">Оплачен</option>
+                                    <option value="fail">Ошибка</option>
+                                    <option value="refunded">Возврат</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="orderByOdata" class="form-label">Сортировка</label>
+                                <select id="orderByOdata" class="form-select">
+                                    <option value="" selected>Выбор...</option>
+                                    <option value="Total">Сумма</option>
+                                    <option value="UserName">Пользователь</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 align-self-end">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="orderByIsDescendingOdata">
+                                    <label class="form-check-label" for="orderByIsDescendingOdata">
+                                        В обратном порядке
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="pageOdata" class="form-label">Страница (с нуля)</label>
+                                <input type="number" class="form-control" id="pageOdata" value="0" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="pageItemsCountOdata" class="form-label">Строк на странице</label>
+                                <input type="number" class="form-control" id="pageItemsCountOdata" />
+                            </div>
+
+                            <div class="col-12">
+                                <button class="btn btn-primary" onclick="searchByOdata()">Поиск</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="sieve" role="tabpanel" aria-labelledby="sieve-tab">
+                        <h2 class="mb-3">Sieve поиск</h2>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="userNameSieve" class="form-label">Пользователь</label>
+                                <input type="text" class="form-control" id="userNameSieve" placeholder="ivanov">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cartTotalSieve" class="form-label">Сумма больше</label>
+                                <input type="number" class="form-control" id="cartTotalSieve">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cartItemNameSieve" class="form-label">Предмет заказа</label>
+                                <input type="text" class="form-control" id="cartItemNameSieve" placeholder="Карандаш">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="orderStatusSieve" class="form-label">Статус заказа</label>
+                                <select id="orderStatusSieve" class="form-select">
+                                    <option value="" selected>Выбор...</option>
+                                    <option value="Init">Оформление</option>
+                                    <option value="Paid">Оплачен</option>
+                                    <option value="Fail">Ошибка</option>
+                                    <option value="Refunded">Возврат</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="orderBySieve" class="form-label">Сортировка</label>
+                                <select id="orderBySieve" class="form-select">
+                                    <option value="" selected>Выбор...</option>
+                                    <option value="total">Сумма</option>
+                                    <option value="userName">Пользователь</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 align-self-end">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="orderByIsDescendingSieve">
+                                    <label class="form-check-label" for="orderByIsDescendingSieve">
+                                        В обратном порядке
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="pageSieve" class="form-label">Страница (с единицы)</label>
+                                <input type="number" class="form-control" id="pageSieve" value="0" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="pageItemsCountSieve" class="form-label">Строк на странице</label>
+                                <input type="number" class="form-control" id="pageItemsCountSieve" />
+                            </div>
+
+                            <div class="col-12">
+                                <button class="btn btn-primary" onclick="searchBySieve()">Поиск</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="ra" role="tabpanel" aria-labelledby="ra-tab">
+                        <h2 class="mb-3">Ra поиск</h2>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="userNameRa" class="form-label">Пользователь</label>
+                                <input type="text" class="form-control" id="userNameRa" placeholder="ivanov">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cartTotalRa" class="form-label">Сумма больше</label>
+                                <input type="number" class="form-control" id="cartTotalRa">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cartItemNameRa" class="form-label">Предмет заказа</label>
+                                <input type="text" class="form-control" id="cartItemNameRa" placeholder="Карандаш">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="orderStatusRa" class="form-label">Статус заказа</label>
+                                <select id="orderStatusRa" class="form-select">
+                                    <option value="" selected>Выбор...</option>
+                                    <option value="0">Оформление</option>
+                                    <option value="1">Оплачен</option>
+                                    <option value="2">Ошибка</option>
+                                    <option value="3">Возврат</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="orderByRa" class="form-label">Сортировка</label>
+                                <select id="orderByRa" class="form-select">
+                                    <option value="" selected>Выбор...</option>
+                                    <option value="total">Сумма</option>
+                                    <option value="userName">Пользователь</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 align-self-end">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="orderByIsDescendingRa">
+                                    <label class="form-check-label" for="orderByIsDescendingRa">
+                                        В обратном порядке
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="pageRa" class="form-label">Страница (с единицы)</label>
+                                <input type="number" class="form-control" id="pageRa" value="0" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="pageItemsCountRa" class="form-label">Строк на странице</label>
+                                <input type="number" class="form-control" id="pageItemsCountRa" />
+                            </div>
+
+                            <div class="col-12">
+                                <button class="btn btn-primary" onclick="searchByRa()">Поиск</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Статус</th>
+                        <th scope="col">Пользователь</th>
+                        <th scope="col">Сумма</th>
+                        <th scope="col">Состав</th>
+                    </tr>
+                </thead>
+                <tbody id="carts">
+                </tbody>
+                <tfoot>
+                <tr>
+	                <th scope="row" colspan="3">Всего найдено</th>
+	                <td id="totalFound">1</td>
+                </tr>
+                </tfoot>
+            </table>
+
+        </main>
+
+        <footer class="pt-4 my-md-5 pt-md-5 border-top">
+            <div class="row">
+                <div class="col-12 col-md">
+                    <small class="d-block mb-3 text-body-secondary">&copy; 2017–2025</small>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>Возможности</h5>
+                    <ul class="list-unstyled text-small">
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Простой поиск</a></li>
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Сортировка по параметрам</a></li>
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Несколько реализаций серверной фильтрации</a></li>
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Открытый исходный код</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>О проекте</h5>
+                    <ul class="list-unstyled text-small">
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Команда</a></li>
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Контакты</a></li>
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Конфиденциальность</a></li>
+                        <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Правила</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
