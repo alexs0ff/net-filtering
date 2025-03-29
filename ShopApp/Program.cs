@@ -1,4 +1,6 @@
 using System.Reflection;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using ShopApp.Entities;
@@ -11,7 +13,10 @@ using Sieve.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers().RegisterOData();
+builder.Services.AddControllers().AddJsonOptions(op =>
+{
+    op.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+}).RegisterOData();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ISieveProcessor, ApplicationSieveProcessor>();
