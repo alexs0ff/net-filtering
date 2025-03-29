@@ -60,10 +60,10 @@ function addRaFilter(statements, value, parameterName, comparisonOperator, chang
         }
 
         const newStatement = {            
-            comparisonOperator: comparisonOperator,
-            logicalOperator: "and",
-            parameterName: parameterName,
-            parameterValue: value
+            spec: comparisonOperator,
+            op: "and",
+            name: parameterName,
+            value: value
         };
         statements.push(newStatement);
     }
